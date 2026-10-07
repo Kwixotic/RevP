@@ -1,0 +1,16 @@
+{
+  "name":"Luma — Simulation personnelle",
+  "short_name":"Luma",
+  "description":"Comptes, cartes, paiements et épargne fictifs.",
+  "id":"./",
+  "start_url":"./",
+  "scope":"./",
+  "display":"standalone",
+  "background_color":"#111721",
+  "theme_color":"#111721",
+  "lang":"fr",
+  "icons":[
+    {"src":"./icon.svg?v=4","sizes":"any","type":"image/svg+xml","purpose":"any"},
+    {"src":"./apple-touch-icon.png?v=4","sizes":"192x192","type":"image/png","purpose":"any maskable"}
+  ]
+}

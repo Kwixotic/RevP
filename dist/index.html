@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#111721">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Luma">
+  <meta name="description" content="Luma, votre espace personnel de démo. Une expérience mobile avec comptes multidevises, cartes, épargne et activité fictive.">
+  <title>Luma — Simulation personnelle</title>
+  <style>
+    body{margin:0;background:#0a1019}
+    .app-splash{position:fixed;inset:0;z-index:1000;background:#111721;color:#f2f5fa;display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:-apple-system,BlinkMacSystemFont,sans-serif;transition:opacity .35s ease,visibility .35s ease}
+    .splash-logo{position:relative;width:108px;height:108px;display:grid;place-items:center}
+    .splash-logo img{width:68px;height:68px;border-radius:19px}
+    .splash-ring{position:absolute;inset:0;border-radius:50%;border:1px solid #2c3b51;border-top:2px solid #b7d6fc;border-right:2px solid #647fc0;animation:splash-orbit 1.4s linear infinite}
+    .splash-wordmark{font-size:36px;font-weight:600;letter-spacing:-1.5px;margin-top:23px}
+    .splash-caption{font-size:11px;color:#8e9aad;margin-top:13px;text-align:center;line-height:1.7}
+    .splash-track{height:2px;width:82px;overflow:hidden;background:#253149;border-radius:2px;margin-top:25px}
+    .splash-track span{height:100%;width:38px;background:#b7d6fc;display:block;animation:splash-progress 1.2s ease-in-out infinite}
+    .splash-demo{font-size:8px;letter-spacing:1.5px;color:#64728a;position:absolute;bottom:calc(36px + env(safe-area-inset-bottom))}
+    .splash-retry{background:#25344d;color:#c4d9fb;border:0;border-radius:12px;padding:12px 18px;margin-top:18px}
+    .app-splash.splash-done{opacity:0;visibility:hidden;pointer-events:none}
+    @keyframes splash-orbit{to{transform:rotate(360deg)}}
+    @keyframes splash-progress{0%{transform:translateX(-38px)}100%{transform:translateX(82px)}}
+    @media(prefers-reduced-motion:reduce){.splash-ring,.splash-track span{animation:none}.app-splash{transition:none}}
+  </style>
+  <link rel="icon" href="./icon.svg?v=4" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="./apple-touch-icon.png?v=4">
+  <link rel="manifest" href="./manifest.webmanifest?v=4">
+  <link rel="stylesheet" href="./styles.css?v=4">
+</head>
+<body class="dark">
+  <div id="app-splash" class="app-splash" role="status" aria-label="Chargement de Luma">
+    <div class="splash-logo"><span class="splash-ring" aria-hidden="true"></span><img src="./icon.svg?v=4" alt="" width="68" height="68"></div>
+    <div class="splash-wordmark">luma</div>
+    <p id="splash-caption" class="splash-caption">Votre espace se prépare.</p>
+    <div class="splash-track" aria-hidden="true"><span></span></div>
+    <button id="splash-retry" class="splash-retry" hidden>Réessayer</button>
+    
+  </div>
+  <div class="desktop-note" aria-hidden="true">
+    <span class="desktop-brand">luma</span>
+    <h1>Votre quotidien.<br>En mouvement.</h1>
+    <p>Un espace personnel pour explorer<br>une autre façon de gérer l’argent.</p>
+    <div class="desktop-caption"><span class="dot"></span> EXPÉRIENCE MOBILE</div>
+  </div>
+  <div class="phone-shell">
+    <main id="app" aria-live="polite"></main>
+    <div id="sheet-root"></div>
+    <div id="toast" role="status" aria-live="polite"></div>
+  </div>
+  <footer class="global-disclosure" aria-label="Application de démonstration sans compte bancaire réel">Démonstration — aucun compte réel</footer>
+  <noscript><style>.app-splash{display:none}</style><p style="color:#fff">Active JavaScript pour ouvrir cette application de démonstration.</p></noscript>
+  <script src="./startup.js?v=4" defer></script>
+  <script type="module" src="./app.js?v=4"></script>
+</body>
+</html>
