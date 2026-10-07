@@ -64,9 +64,9 @@ test('les cinq onglets et tous les principaux dialogues rendent sans erreur',asy
 test('ajout, virement et change enregistrés depuis leurs formulaires',async()=>{
   await click('tab','home');
   const before=saved().wallets.EUR;
-  await click('topup');submit('topup-form',{amount:'123,45',method:'Carte de démo'});
+  await click('topup');submit('topup-form',{amount:'123,45',method:'Carte'});
   assert.equal(saved().wallets.EUR,before+12345);
-  await click('send');submit('send-form',{recipient:'Paul',amount:'23,45',currency:'EUR',date:new Date().toLocaleDateString('en-CA',{timeZone:'Africa/Cairo'}),note:'Test démo'});
+  await click('send');submit('send-form',{recipient:'Paul',amount:'23,45',currency:'EUR',date:new Date().toLocaleDateString('en-CA',{timeZone:'Africa/Cairo'}),note:'Test'});
   assert.equal(saved().wallets.EUR,before+10000);
   await click('exchange');const beforeUSD=saved().wallets.USD;
   submit('exchange-form',{amount:'10',from:'EUR',to:'USD'});
@@ -103,7 +103,7 @@ test('contact, carte, gel, région, mode sombre et recherche',async()=>{
   await click('search');assert.match(app(),/Rechercher un lieu/);
   await click('filter','out');assert.match(app(),/Transactions/);
 });
-test('demande fictive, réception idempotente et copie marquée DEMO',async()=>{
+test('demande de paiement, réception idempotente et copie',async()=>{
   submit('request-form',{name:'Camille',amount:'19,20',currency:'EUR'});
   const r=saved().requests.at(-1),before=saved().wallets.EUR;
   await click('receive-request',r.id);
@@ -111,12 +111,12 @@ test('demande fictive, réception idempotente et copie marquée DEMO',async()=>{
   await click('receive-request',r.id);
   assert.equal(saved().wallets.EUR,before+1920);
   await click('share-request',r.id);
-  assert.match(values.get('clipboard'),/DÉMO LUMA/);
-  assert.match(values.get('clipboard'),/Aucun paiement réel/);
+  assert.match(values.get('clipboard'),/LUMA — Demande de paiement/);
+  
 });
-test('export marqué DEMO, données valides et verrouillage final',async()=>{
+test('export CSV, données valides et verrouillage final',async()=>{
   await click('export');
-  assert.match(download.at(-1),/^Luma-DEMO-transactions-/);
+  assert.match(download.at(-1),/^Luma-transactions-/);
   assert.ok(assertState(saved()));
   await click('lock');
   assert.match(app(),/Saisissez votre code/);

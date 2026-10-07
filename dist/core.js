@@ -111,7 +111,7 @@ export const MERCHANTS = {
   }
 };
 export function merchantLabel(key,regionId,category) {
-  const names=(MERCHANTS[regionId]||MERCHANTS.world)[category]||['Paiement de démo'];
+  const names=(MERCHANTS[regionId]||MERCHANTS.world)[category]||['Paiement'];
   return names[Math.floor(random('merchant-'+key+'-'+regionId+'-'+category)()*names.length)];
 }
 export function hash(text) {
@@ -178,7 +178,7 @@ export function dailyCandidates(key, regionId) {
   if (day === 25) items.push({
     id:'auto-' + key + '-income',timestamp:zonedStamp(key,9,17,r.tz),
     name:'Studio Meridian',category:'income',currency:'EUR',amount:325000 + Math.floor(rng()*17500),
-    originalCurrency:'EUR',region:r.id,city:r.city,method:'Virement',automatic:true,status:'completed',note:'Mission mensuelle · démo'
+    originalCurrency:'EUR',region:r.id,city:r.city,method:'Virement',automatic:true,status:'completed',note:'Mission mensuelle'
   });
   const sub = { 3: ['Spotify Premium', 1099], 10: ['Apple · iCloud+', 299], 18: ['Adobe · Creative Cloud', 1299] }[day];
   if (sub) items.push({
@@ -201,7 +201,7 @@ export function historyRegion(key,today) {
 export function initialState(now = new Date()) {
   const today = dateKey(now), start=threeMonthsAgo(today);
   const state = {
-    version:VERSION, createdAt:now.toISOString(), profile:{ name:'Lucas Jouvençon', initials:'LJ', handle:'lucas.j', plan:'Plus · démo' },
+    version:VERSION, createdAt:now.toISOString(), profile:{ name:'Lucas Jouvençon', initials:'LJ', handle:'lucas.j', plan:'Plus' },
     wallets:{ EUR:2789642, USD:164828, GBP:48290, EGP:0, THB:0 },
     currency:'EUR', theme:'dark', appearanceRevision:2, historyRevision:HISTORY_REVISION, historyStart:start,
     hideBalance:false, autoSimulation:true, location:{regionId:'aswan',source:'manual',updatedAt:now.toISOString()},
@@ -320,14 +320,14 @@ export function processSchedules(state, now=new Date()) {
   state.schedules.filter(s=>s.status==='pending' && s.date<=today).forEach(s=>{
     if (!canDebit(state,s.currency,s.cents)) {s.status='failed';return;}
     const tx = {id:s.id,name:s.recipient,amount:-s.cents,currency:s.currency,category:'transfer',note:s.note,
-      timestamp:now.toISOString(),region:state.location.regionId,city:regionById(state.location.regionId).city,method:'Virement programmé · démo',status:'completed'};
+      timestamp:now.toISOString(),region:state.location.regionId,city:regionById(state.location.regionId).city,method:'Virement programmé',status:'completed'};
     if (applyTransaction(state,tx)) s.status='completed';
   });
 }
-export function topUp(state,cents,currency='EUR',method='Carte de démo',now=new Date()) {
+export function topUp(state,cents,currency='EUR',method='Carte',now=new Date()) {
   if (!validateAmount(cents)) throw new Error('Entre un montant valide, inférieur ou égal à 1 000 000.');
   const tx = {id:userId(),name:'Ajout d’argent',amount:cents,currency,category:'topup',timestamp:now.toISOString(),
-    region:state.location.regionId,city:regionById(state.location.regionId).city,method:method+' · démo',status:'completed'};
+    region:state.location.regionId,city:regionById(state.location.regionId).city,method:method,status:'completed'};
   if (!applyTransaction(state,tx)) throw new Error('Le montant n’a pas pu être enregistré.');
   return tx;
 }
@@ -336,7 +336,7 @@ export function exchange(state,cents,from,to,now=new Date()) {
   if (!canDebit(state,from,cents)) throw new Error(from==='EUR' ? 'La réserve du compte de 23 000 € doit être conservée.' : 'Le solde est insuffisant.');
   const receive = Math.round(cents/RATES[from]*RATES[to]);
   if (!receive || !Number.isSafeInteger(state.wallets[to]+receive)) throw new Error('Le montant est invalide.');
-  const base = {category:'exchange',timestamp:now.toISOString(),region:state.location.regionId,city:regionById(state.location.regionId).city,method:'Change · taux de démo',status:'completed'};
+  const base = {category:'exchange',timestamp:now.toISOString(),region:state.location.regionId,city:regionById(state.location.regionId).city,method:'Change · taux fixes',status:'completed'};
   const id = userId();
   applyTransaction(state,{...base,id:id+'-out',name:'Change vers '+to,amount:-cents,currency:from});
   applyTransaction(state,{...base,id:id+'-in',name:'Change depuis '+from,amount:receive,currency:to});
@@ -350,7 +350,7 @@ export function pocketMove(state,pocketId,cents,direction,now=new Date()) {
   if (!['deposit','withdraw'].includes(direction)) throw new Error('Action inconnue.');
   const deposit=direction==='deposit';
   const tx = {id:userId(),name:pocket.name,amount:deposit?-cents:cents,currency:'EUR',category:'savings',
-    timestamp:now.toISOString(),region:state.location.regionId,city:regionById(state.location.regionId).city,method:deposit?'Vers la poche · démo':'Depuis la poche · démo',status:'completed'};
+    timestamp:now.toISOString(),region:state.location.regionId,city:regionById(state.location.regionId).city,method:deposit?'Vers la poche':'Depuis la poche',status:'completed'};
   if (!applyTransaction(state,tx)) throw new Error('L’opération n’a pas pu être enregistrée.');
   pocket.balance += deposit?cents:-cents;
   return tx;

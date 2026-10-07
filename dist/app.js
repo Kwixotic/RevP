@@ -116,7 +116,7 @@ function home() {
 }
 function cardVisual(extra=null) {
   const frozen=extra?extra.frozen:state.cards.frozen,last4=extra?extra.last4:state.cards.last4;
-  return `<div class="card-visual ${frozen?'frozen':''}"><div class="card-top"><span class="card-brand">luma</span></div><div class="card-chip" aria-hidden="true">${Array.from({length:6},()=>'<i></i>').join('')}</div><div class="card-number">${showCard?'TEST 0000 0000':'•••• •••• ••••'} ${esc(last4)}</div><div class="card-bottom"><span class="card-holder">Lucas Jouvençon<br><span style="display:block;margin-top:6px;font-size:8px;color:#8b9ab0">CARTE ${extra?.type==='disposable'?'ÉPHÉMÈRE':'VIRTUELLE'}</span></span><span class="card-mark" aria-hidden="true"></span></div></div>`;
+  return `<div class="card-visual ${frozen?'frozen':''}"><div class="card-top"><span class="card-brand">luma</span></div><div class="card-chip" aria-hidden="true">${Array.from({length:6},()=>'<i></i>').join('')}</div><div class="card-number">${showCard?'0000 0000':'•••• •••• ••••'} ${esc(last4)}</div><div class="card-bottom"><span class="card-holder">Lucas Jouvençon<br><span style="display:block;margin-top:6px;font-size:8px;color:#8b9ab0">CARTE ${extra?.type==='disposable'?'ÉPHÉMÈRE':'VIRTUELLE'}</span></span><span class="card-mark" aria-hidden="true"></span></div></div>`;
 }
 function toggleRow(label,description,key,enabled,i) {
   return `<div class="setting-row"><div class="setting-left">${icon(i)}<div><div class="setting-name">${label}</div><div class="setting-description">${description}</div></div></div><button class="toggle ${enabled?'on':''}" data-act="toggle-setting" data-id="${key}" role="switch" aria-checked="${enabled}" aria-label="${label}"></button></div>`;
@@ -126,7 +126,7 @@ function cards() {
   <div class="three-actions"><button class="tile-action" data-act="card-details">${icon('eye')}Détails</button><button class="tile-action" data-act="freeze">${icon('snow')}${state.cards.frozen?'Dégeler':'Geler'}</button><button class="tile-action" data-act="card-limit">${icon('settings')}Limite</button></div>
   <div class="panel">${toggleRow('Paiements en ligne','Abonnements et achats','online',state.cards.online,'globe')}${toggleRow('À l’étranger','Transactions en devise locale','international',state.cards.international,'plane')}<button class="setting-row" style="width:100%;text-align:left" data-act="card-limit"><span class="setting-left">${icon('chart')}<span><span class="setting-name" style="display:block">Plafond quotidien</span><span class="setting-description" style="display:block">${esc(money(state.cards.dailyLimit))} / jour</span></span></span>${icon('chevron')}</button></div>
   ${(state.cards.extra||[]).map(c=>`<button class="pocket" data-act="extra-card" data-id="${esc(c.id)}"><span class="pocket-top"><span class="pocket-icon" style="background:var(--soft)">${icon('cards')}</span><span><span class="pocket-name" style="display:block">Carte ${c.type==='disposable'?'éphémère':'virtuelle'}</span><span class="setting-description" style="display:block">•••• ${esc(c.last4)} · ${c.frozen?'Gelée':'Active'}</span></span>${icon('chevron')}</span></button>`).join('')}
-  <button class="outline-button" data-act="new-card">${icon('plus')}Créer une carte</button><p class="demo-footnote">Ces cartes ne permettent aucun paiement réel.</p>`;
+  <button class="outline-button" data-act="new-card">${icon('plus')}Créer une carte</button>`;
 }
 function contactsHTML() {
   return `<div class="contact-list">${state.contacts.map(c=>`<button class="contact" data-act="send" data-id="${esc(c.id)}"><span class="contact-circle" style="background:${esc(c.color)}">${esc(c.initials)}</span><span>${esc(c.name.split(' ')[0])}</span></button>`).join('')}<button class="contact contact-add" data-act="new-contact"><span class="contact-circle">${icon('plus')}</span><span>Ajouter</span></button></div>`;
@@ -201,7 +201,7 @@ function accountSheet() {
   openSheet('Vos comptes',`<p class="sheet-sub">Cinq devises pour vos déplacements.</p><div class="transactions">${Object.entries(CURRENCIES).map(([c,meta])=>`<button class="tx-row" data-act="select-account" data-id="${c}"><span class="contact-circle" style="height:42px;width:42px;background:var(--soft);font-size:22px">${meta.flag}</span><span class="tx-body"><span class="tx-name" style="display:block">${meta.name}</span><span class="tx-sub" style="display:block">${c} · Compte</span></span><span class="tx-amount">${esc(money(state.wallets[c],c))}</span>${state.currency===c?icon('check'):''}</button>`).join('')}</div>`);
 }
 function topupSheet() {
-  openSheet('Ajouter de l’argent',`<p class="sheet-sub">Alimentez votre compte ${state.currency} avec de l’argent.</p><form id="topup-form"><div class="form-field"><label for="amount">Montant · ${state.currency}</label><input id="amount" name="amount" class="amount-input" inputmode="decimal" placeholder="0,00" required autocomplete="off" maxlength="13"></div><div class="chips">${[50,100,250,500].map(n=>`<button type="button" class="chip" data-act="set-amount" data-id="${n}">+ ${n} ${CURRENCIES[state.currency].symbol}</button>`).join('')}</div><div class="form-field"><label for="method">Méthode</label><select id="method" name="method"><option>Carte</option><option>Virement</option></select></div>${errorHTML()}<button class="primary-button" type="submit">Ajouter l’argent</button></form><p class="demo-footnote">Aucune carte réelle et aucune coordonnée bancaire requises.</p>`);
+  openSheet('Ajouter de l’argent',`<p class="sheet-sub">Alimentez votre compte ${state.currency} avec de l’argent.</p><form id="topup-form"><div class="form-field"><label for="amount">Montant · ${state.currency}</label><input id="amount" name="amount" class="amount-input" inputmode="decimal" placeholder="0,00" required autocomplete="off" maxlength="13"></div><div class="chips">${[50,100,250,500].map(n=>`<button type="button" class="chip" data-act="set-amount" data-id="${n}">+ ${n} ${CURRENCIES[state.currency].symbol}</button>`).join('')}</div><div class="form-field"><label for="method">Méthode</label><select id="method" name="method"><option>Carte</option><option>Virement</option></select></div>${errorHTML()}<button class="primary-button" type="submit">Ajouter l’argent</button></form>`);
 }
 function sendSheet(contactId=null,scheduled=false) {
   const contact=state.contacts.find(c=>c.id===contactId),today=nowDay();
@@ -209,7 +209,7 @@ function sendSheet(contactId=null,scheduled=false) {
 }
 function exchangeSheet() {
   const from=state.currency,to=from==='EUR'?'USD':'EUR';
-  openSheet('Changer de devise',`<p class="sheet-sub">Passez d’un compte à l’autre avec les taux fixes de l’app.</p><form id="exchange-form"><div class="field-pair"><div class="form-field"><label for="from">Depuis</label><select id="from" name="from">${currencyOptions(from)}</select></div><div class="form-field"><label for="to">Vers</label><select id="to" name="to">${currencyOptions(to)}</select></div></div><div class="form-field"><label for="amount">Montant à changer</label><input id="amount" name="amount" class="amount-input" inputmode="decimal" placeholder="0,00" required maxlength="13"></div><div id="exchange-preview" class="info-box">Renseignez un montant pour afficher la conversion.</div>${errorHTML()}<button class="primary-button" type="submit">Confirmer le change</button></form><p class="demo-footnote">Taux fixes · Aucun cours en temps réel.</p>`);
+  openSheet('Changer de devise',`<p class="sheet-sub">Passez d’un compte à l’autre avec les taux fixes de l’app.</p><form id="exchange-form"><div class="field-pair"><div class="form-field"><label for="from">Depuis</label><select id="from" name="from">${currencyOptions(from)}</select></div><div class="form-field"><label for="to">Vers</label><select id="to" name="to">${currencyOptions(to)}</select></div></div><div class="form-field"><label for="amount">Montant à changer</label><input id="amount" name="amount" class="amount-input" inputmode="decimal" placeholder="0,00" required maxlength="13"></div><div id="exchange-preview" class="info-box">Renseignez un montant pour afficher la conversion.</div>${errorHTML()}<button class="primary-button" type="submit">Confirmer le change</button></form>`);
 }
 function requestSheet() {
   openSheet('Demander un paiement',`<p class="sheet-sub">Préparez une demande. Rien n’est envoyé à vos contacts.</p><form id="request-form"><div class="form-field"><label for="name">À qui ?</label><input id="name" name="name" placeholder="Nom du contact" maxlength="60" required></div><div class="field-pair"><div class="form-field"><label for="amount">Montant</label><input id="amount" name="amount" inputmode="decimal" placeholder="0,00" maxlength="13" required></div><div class="form-field"><label for="currency">Devise</label><select id="currency" name="currency">${currencyOptions(state.currency)}</select></div></div>${errorHTML()}<button class="primary-button" type="submit">Créer la demande</button></form>`);
@@ -218,10 +218,10 @@ function transactionSheet(id) {
   const t=state.transactions.find(t=>t.id===id);if(!t)return;
   const c=categoryMeta(t),amount=t.status==='declined'?t.attemptedAmount:t.amount;
   const stamp=new Intl.DateTimeFormat('fr-FR',{timeZone:regionById(t.region).tz,dateStyle:'long',timeStyle:'short'}).format(new Date(t.timestamp));
-  openSheet('Détails de la transaction',`<div class="detail-hero"><div class="tx-icon" style="background:${c.color}17;color:${c.color}">${icon(c.icon)}</div><p>${esc(t.name)}</p><h3 class="${amount>0?'positive':''}">${amount>0?'+':''}${esc(money(amount,t.currency))}</h3><p>${t.status==='declined'?'Paiement refusé':'Transaction · Terminée'}</p></div><div class="details-list">${detailsRow('Date',stamp)}${detailsRow('Lieu',t.city||'En ligne')}${detailsRow('Catégorie',c.label)}${detailsRow('Méthode',t.method||'Démo')}${t.originalAmount&&t.originalCurrency!==t.currency?detailsRow('Montant local',state.hideBalance?'••••':formatMoney(t.originalAmount,t.originalCurrency)):''}${detailsRow('Solde après opération',money(t.balanceAfter,t.currency))}${t.note?detailsRow('Message',t.note):''}${detailsRow('Référence','TEST-'+t.id.slice(-12).toUpperCase())}</div><div class="info-box neutral">Donnée fictive. Cette page ne constitue pas une preuve de paiement ni un document bancaire.</div><button class="primary-button" data-act="close-sheet">Fermer</button>`);
+  openSheet('Détails de la transaction',`<div class="detail-hero"><div class="tx-icon" style="background:${c.color}17;color:${c.color}">${icon(c.icon)}</div><p>${esc(t.name)}</p><h3 class="${amount>0?'positive':''}">${amount>0?'+':''}${esc(money(amount,t.currency))}</h3><p>${t.status==='declined'?'Paiement refusé':'Transaction · Terminée'}</p></div><div class="details-list">${detailsRow('Date',stamp)}${detailsRow('Lieu',t.city||'En ligne')}${detailsRow('Catégorie',c.label)}${detailsRow('Méthode',t.method||'—')}${t.originalAmount&&t.originalCurrency!==t.currency?detailsRow('Montant local',state.hideBalance?'••••':formatMoney(t.originalAmount,t.originalCurrency)):''}${detailsRow('Solde après opération',money(t.balanceAfter,t.currency))}${t.note?detailsRow('Message',t.note):''}${detailsRow('Référence','LUMA-'+t.id.slice(-12).toUpperCase())}</div><button class="primary-button" data-act="close-sheet">Fermer</button>`);
 }
 function accountDetailsSheet() {
-  openSheet('Coordonnées',`<p class="sheet-sub">Références de test non utilisables pour un virement.</p><div class="details-list">${detailsRow('Titulaire','Lucas Jouvençon')}${detailsRow('Compte',state.currency+' · Luma démo')}${detailsRow('Référence','TEST-LUMA-'+state.currency+'-0428')}${detailsRow('Établissement','Luma')}</div><div class="info-box neutral">Aucun IBAN ni compte bancaire réel. Ces informations ne permettent pas de recevoir un virement.</div><button class="primary-button" data-act="copy-account">${icon('copy')}Copier la référence</button>`);
+  openSheet('Coordonnées',`<p class="sheet-sub">Votre référence de compte.</p><div class="details-list">${detailsRow('Titulaire','Lucas Jouvençon')}${detailsRow('Compte',state.currency)}${detailsRow('Référence','LUMA-'+state.currency+'-0428')}${detailsRow('Établissement','Luma')}</div><button class="primary-button" data-act="copy-account">${icon('copy')}Copier la référence</button>`);
 }
 function profileSheet() {
   openSheet('Votre espace',`<div class="profile-button" style="margin:0 0 20px"><span class="avatar" style="width:57px;height:57px;border-radius:20px">LJ</span><span><span style="display:block;font-size:17px;font-weight:600">Lucas Jouvençon</span><span class="profile-caption" style="display:block">@lucas.j · Plus</span></span></div><div class="panel">
@@ -237,7 +237,7 @@ function locationSheet() {
   openSheet('Votre localisation',`<p class="sheet-sub">La région détermine les nouveaux libellés de commerces, la devise locale et les horaires. Les anciens paiements conservent leur lieu.</p><button class="primary-button" data-act="geolocate">${icon('location')}Utiliser ma position</button><p style="font-size:11px;color:var(--sub);margin:22px 0 12px">OU CHOISIR UNE VILLE</p><div class="transactions">${REGIONS.map(r=>`<button class="tx-row" data-act="select-location" data-id="${r.id}"><span style="font-size:24px;width:33px">${r.flag}</span><span class="tx-body"><span class="tx-name" style="display:block">${r.city}</span><span class="tx-sub" style="display:block">${r.country} · ${r.currency}</span></span>${currentRegion().id===r.id?icon('check'):icon('chevron')}</button>`).join('')}</div><p class="demo-footnote">La position sert uniquement à choisir une région.<br>Les coordonnées exactes ne sont ni stockées ni envoyées par Luma.</p>`);
 }
 function cardDetailsSheet() {
-  openSheet('Votre carte virtuelle',`<div class="details-list">${detailsRow('Titulaire','Lucas Jouvençon')}${detailsRow('Identifiant de test',showCard?'TEST 0000 0000 0428':'TEST •••• •••• 0428')}${detailsRow('Expiration','09/29')}${detailsRow('Code de sécurité','TEST')}${detailsRow('État',state.cards.frozen?'Gelée':'Active')}</div><div class="info-box neutral">Carte fictive avec un numéro non bancaire. Aucun paiement réel n’est possible.</div><button class="primary-button" data-act="reveal-card">${icon(showCard?'eyeOff':'eye')}${showCard?'Masquer les détails':'Afficher les détails'}</button>`);
+  openSheet('Votre carte virtuelle',`<div class="details-list">${detailsRow('Titulaire','Lucas Jouvençon')}${detailsRow('Numéro',showCard?'0000 0000 0428':'•••• •••• 0428')}${detailsRow('Expiration','09/29')}${detailsRow('Code de sécurité','•••')}${detailsRow('État',state.cards.frozen?'Gelée':'Active')}</div><div class="info-box neutral">Carte virtuelle de votre compte.</div><button class="primary-button" data-act="reveal-card">${icon(showCard?'eyeOff':'eye')}${showCard?'Masquer les détails':'Afficher les détails'}</button>`);
 }
 function pocketSheet(id) {
   const p=state.pockets.find(p=>p.id===id);if(!p)return;
@@ -285,10 +285,10 @@ async function copy(text,message='Copié') {
 }
 function exportCSV() {
   const cell=v=>'"'+String(v??'').replace(/^[=+@-]/,"'").replace(/"/g,'""')+'"';
-  const rows=[['TYPE','DATE','LIBELLE','MONTANT','DEVISE','VILLE','CATEGORIE','STATUT'],...ordered().map(t=>['DEMO - DONNEES FICTIVES',t.timestamp,t.name,(t.amount/100).toFixed(2),t.currency,t.city,categoryMeta(t).label,t.status])];
+  const rows=[['TYPE','DATE','LIBELLE','MONTANT','DEVISE','VILLE','CATEGORIE','STATUT'],...ordered().map(t=>['LUMA',t.timestamp,t.name,(t.amount/100).toFixed(2),t.currency,t.city,categoryMeta(t).label,t.status])];
   const csv='\uFEFF'+rows.map(row=>row.map(cell).join(';')).join('\r\n');
   const blob=new Blob([csv],{type:'text/csv;charset=utf-8'}),url=URL.createObjectURL(blob),a=document.createElement('a');
-  a.href=url;a.download='Luma-DEMO-transactions-'+nowDay()+'.csv';document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),10000);
+  a.href=url;a.download='Luma-transactions-'+nowDay()+'.csv';document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),10000);
   toast('Export préparé.');
 }
 function lock() {unlocked=false;pin='';showCard=false;closeSheet();render();window.scrollTo({top:0});}
@@ -359,7 +359,7 @@ document.addEventListener('click',async event=>{
       case'request':requestSheet();break;
       case'more':moreSheet();break;
       case'account-details':accountDetailsSheet();break;
-      case'copy-account':await copy('DEMO — Lucas Jouvençon — LUMA-'+state.currency+'-0428 — Identifiant fictif, aucun IBAN.','Référence copiée.');break;
+      case'copy-account':await copy('Lucas Jouvençon — LUMA-'+state.currency+'-0428','Référence copiée.');break;
       case'all-transactions':case'search':view='transactions';search='';filter='all';closeSheet();render();window.scrollTo({top:0});if(act==='search')document.getElementById('tx-search')?.focus();break;
       case'back-main':view='main';tab='home';render();break;
       case'filter':filter=id;render();break;
@@ -397,7 +397,7 @@ document.addEventListener('click',async event=>{
       }
       case'share-request':{
         const r=state.requests.find(r=>r.id===id);if(!r)break;
-        const text='DÉMO LUMA — Demande fictive à '+r.name+' : '+formatMoney(r.cents,r.currency)+'. Aucun paiement réel n’est demandé.';
+        const text='LUMA — Demande de paiement à '+r.name+' : '+formatMoney(r.cents,r.currency)+'.';
         if(navigator.share){try{await navigator.share({title:'Luma — demande',text});}catch(e){if(e.name!=='AbortError')await copy(text,'Texte copié.');}}
         else await copy(text,'Texte copié.');break;
       }
@@ -498,7 +498,7 @@ setInterval(()=>{
 },60000);
 window.addEventListener('offline',()=>toast('Mode hors ligne · votre espace reste disponible.'));
 window.addEventListener('online',()=>toast('Connexion rétablie.'));
-if('serviceWorker'in navigator){navigator.serviceWorker.register('./sw.js?v=4').catch(()=>{});}
+if('serviceWorker'in navigator){navigator.serviceWorker.register('./sw.js?v=5').catch(()=>{});}
 theme();persist();render();
 window.__lumaReady=true;
 if(window.visualViewport){

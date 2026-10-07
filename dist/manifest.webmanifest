@@ -1,7 +1,7 @@
 {
-  "name":"Luma — Simulation personnelle",
+  "name":"Luma",
   "short_name":"Luma",
-  "description":"Comptes, cartes, paiements et épargne fictifs.",
+  "description":"Comptes, cartes, paiements et épargne.",
   "id":"./",
   "start_url":"./",
   "scope":"./",
